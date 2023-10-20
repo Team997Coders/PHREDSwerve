@@ -15,6 +15,15 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
+import com.revrobotics.AbsoluteEncoder;
+// x1's are drives
+// x2's are turns
+
+//1x front left
+//2x front right
+//3x back right
+//4x back left
+
 public class SwerveModule {
   private static final double kWheelRadius = 0.0508;
   private static final int kEncoderResolution = 4096;
