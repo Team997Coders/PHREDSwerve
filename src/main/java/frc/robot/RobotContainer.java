@@ -7,11 +7,13 @@ package frc.robot;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
@@ -33,6 +35,12 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
+                swerveSubsystem,
+                () -> -driverJoystick.getRawAxis(OIConstants.kDriverYAxis),
+                () -> driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
+                () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
     configureBindings();
   }
 
@@ -46,13 +54,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    new JoystickButton(driverJoystick, 2).whenPressed(() -> swerveSubsystem.zeroHeading());
   }
 
   /**
