@@ -1,0 +1,203 @@
+
+package frc.robot.subsystems;
+
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.SPI;
+/*
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.Timer; 
+*/
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+//import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.controls.LogitechPro;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
+
+/**
+ *
+ */
+public class Drive extends SubsystemBase {
+  private CANSparkMax sparkMAXLeftFront;
+  private CANSparkMax sparkMAXLeftRear;
+  private MotorControllerGroup motorControllerGroupLeftSide;
+  private CANSparkMax sparkMAXRightFront;
+  private CANSparkMax sparkMAXRightRear;
+  private MotorControllerGroup motorControllerGroupRightSide;
+  private DifferentialDrive differentialDrive;
+  private AHRS navXMicro;
+  public RelativeEncoder quadratureEncoderLeft;
+  public RelativeEncoder quadratureEncoderRight;
+  private final LogitechPro joyStick = new LogitechPro(1);
+  private double levelX;
+
+  /**
+  *
+  */
+  public Drive() {
+    super();
+
+    sparkMAXLeftFront = new CANSparkMax(DriveConstants.kLeftFrontMotorCANPort, MotorType.kBrushless);
+
+    sparkMAXLeftFront.restoreFactoryDefaults();
+    sparkMAXLeftFront.setInverted(false);
+    sparkMAXLeftFront.setIdleMode(IdleMode.kBrake);
+    sparkMAXLeftFront.burnFlash();
+
+    sparkMAXLeftRear = new CANSparkMax(DriveConstants.kLeftRearMotorCANPort, MotorType.kBrushless);
+
+    sparkMAXLeftRear.restoreFactoryDefaults();
+    sparkMAXLeftRear.setInverted(false);
+    sparkMAXLeftRear.setIdleMode(IdleMode.kBrake);
+    sparkMAXLeftRear.burnFlash();
+
+    motorControllerGroupLeftSide = new MotorControllerGroup(sparkMAXLeftFront, sparkMAXLeftRear);
+    addChild("Motor Controller Group Left Side", motorControllerGroupLeftSide);
+
+    sparkMAXRightFront = new CANSparkMax(DriveConstants.kRightFrontMotorCANPort, MotorType.kBrushless);
+
+    sparkMAXRightFront.restoreFactoryDefaults();
+    sparkMAXRightFront.setInverted(true);
+    sparkMAXRightFront.setIdleMode(IdleMode.kBrake);
+    sparkMAXRightFront.burnFlash();
+
+    sparkMAXRightRear = new CANSparkMax(DriveConstants.kRightRearMotorCANPort, MotorType.kBrushless);
+
+    sparkMAXRightRear.restoreFactoryDefaults();
+    sparkMAXRightRear.setInverted(true);
+    sparkMAXRightRear.setIdleMode(IdleMode.kBrake);
+    sparkMAXRightRear.burnFlash();
+
+    motorControllerGroupRightSide = new MotorControllerGroup(sparkMAXRightFront, sparkMAXRightRear);
+    addChild("Motor Controller Group Right Side", motorControllerGroupRightSide);
+
+    differentialDrive = new DifferentialDrive(motorControllerGroupLeftSide, motorControllerGroupRightSide);
+    addChild("Differential Drive", differentialDrive);
+
+
+    try {
+      navXMicro = new AHRS(SPI.Port.kMXP);
+      levelX = navXMicro.getRoll();
+    } catch (RuntimeException ex) {
+      DriverStation.reportError(ex.getMessage(), true);
+    }
+    Timer.delay(1.0);
+
+    addChild("NavX Micro", navXMicro);
+
+    // Original: quadratureEncoderLeft = new
+    // Encoder(DriveConstants.kLeftEncodePortA, DriveConstants.kLeftEncodePortB,
+    // false, EncodingType.k4X);
+
+    quadratureEncoderLeft = sparkMAXLeftFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+
+    quadratureEncoderRight = sparkMAXRightFront.getEncoder(SparkMaxRelativeEncoder.Type.kHallSensor, 42);
+
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Encoder Left", quadratureEncoderLeft.getPosition());
+    SmartDashboard.putNumber("Encoder Right", quadratureEncoderRight.getPosition());
+    SmartDashboard.putBoolean("Joystick Trigger", joyStick.getTrigger());
+
+    SmartDashboard.putNumber("NavX y", navXMicro.getPitch());
+    SmartDashboard.putNumber("NavX x", navXMicro.getRoll());
+    SmartDashboard.putNumber("NavX z", navXMicro.getYaw());
+
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // This method will be called once per scheduler run when in simulation
+
+  }
+
+  // Put methods for controlling this subsystem
+  // here. Call these from Commands.
+
+  public double avgLeftEncoderRate() {
+    return quadratureEncoderLeft.getVelocity();
+  }
+
+  public double avgRightEncoderRate() {
+    return quadratureEncoderRight.getVelocity();
+  }
+
+  public double errorLeft() {
+    return avgRightEncoderRate() - avgLeftEncoderRate();
+  }
+
+  public double errorRight() {
+    return avgLeftEncoderRate() - avgRightEncoderRate();
+  }
+
+  public void encoderReset() {
+    quadratureEncoderLeft.setPosition(0);
+    quadratureEncoderRight.setPosition(0);
+  }
+
+  public double avgAllEncoderDistance() {
+    return (quadratureEncoderLeft.getPosition() + quadratureEncoderRight.getPosition()) / 2;
+  }
+
+  public double getHeading() {
+    return Math.IEEEremainder(navXMicro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  public void vroom(double m_speed, double m_rotation, boolean straight) {
+    differentialDrive.arcadeDrive(m_speed, m_rotation);
+
+    if (straight == true && avgLeftEncoderRate() > avgRightEncoderRate()) {
+      sparkMAXLeftFront.set(m_speed - Math.abs(errorLeft()));
+      sparkMAXLeftRear.set(m_speed - Math.abs(errorLeft()));
+    }
+    if (straight == true && avgLeftEncoderRate() < avgRightEncoderRate()) {
+      sparkMAXRightFront.set(m_speed - Math.abs(errorRight()));
+      sparkMAXRightRear.set(m_speed - Math.abs(errorRight()));
+    }
+    SmartDashboard.putNumber("Speed:", m_speed);
+  }
+
+  public void setSafety(boolean enable){
+    differentialDrive.setSafetyEnabled(enable);
+    differentialDrive.setExpiration(0.1);
+    differentialDrive.setMaxOutput(1.0);
+  }
+
+  public void park() {
+    sparkMAXLeftFront.setIdleMode(IdleMode.kBrake);
+    sparkMAXLeftRear.setIdleMode(IdleMode.kBrake);
+    sparkMAXRightFront.setIdleMode(IdleMode.kBrake);
+    sparkMAXRightRear.setIdleMode(IdleMode.kBrake);
+  }
+
+  public void coast() {
+    sparkMAXLeftFront.setIdleMode(IdleMode.kCoast);
+    sparkMAXLeftRear.setIdleMode(IdleMode.kCoast);
+    sparkMAXRightFront.setIdleMode(IdleMode.kCoast);
+    sparkMAXRightRear.setIdleMode(IdleMode.kCoast);
+  }
+
+  public void NavXBalance() {
+    if(navXMicro.getRoll()-levelX<-5){
+      vroom(-0.35,0,false);
+    } else if(navXMicro.getRoll()-levelX>5){
+      vroom(0.35,0,false);
+    }
+    SmartDashboard.putBoolean("Orca", true);
+  }
+}
