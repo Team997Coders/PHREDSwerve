@@ -38,6 +38,7 @@ public class SwerveJoystickCmd extends CommandBase {
   this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
   this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+  addRequirements(swerveSubsystem);
 }
 
   // Called when the command is initially scheduled.
