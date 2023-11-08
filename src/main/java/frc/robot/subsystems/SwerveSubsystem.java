@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -81,7 +80,11 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void periodic() {
-    SmartDashboard.putNumber("Robot Heading", getHeading());
+    SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
+    SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
   }
 
   public void stopModules() {
