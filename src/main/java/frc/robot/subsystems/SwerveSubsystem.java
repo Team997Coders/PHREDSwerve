@@ -78,7 +78,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
-
+  // -------------------------------------------------
+  // -------------   Update Dashboard ----------------
   public void periodic() {
     SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
     SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
