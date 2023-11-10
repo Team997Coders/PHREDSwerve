@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -79,14 +78,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
-
+  // -------------------------------------------------
+  // -------------   Update Dashboard ----------------
   public void periodic() {
-    SmartDashboard.putNumber("Robot Heading", getHeading());
-    SmartDashboard.putNumber("encoderfrontleft", frontLeft.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("encoderfrontright", frontRight.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("encoderbacjleft", backLeft.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("orcabacrignt", backRight.getAbsoluteEncoderRad());
-    
+    SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
+    SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
+    SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
   }
 
   public void stopModules() {

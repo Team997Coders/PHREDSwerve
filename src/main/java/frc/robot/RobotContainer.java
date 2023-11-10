@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -45,6 +46,7 @@ public class RobotContainer {
         () -> driverJoystick.getRawAxis(OIConstants.kDriverXAxis),
         () -> driverJoystick.getRawAxis(OIConstants.kDriverRotAxis),
         () -> !driverJoystick.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+
     configureBindings();
   }
 
@@ -63,6 +65,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    new JoystickButton(driverJoystick, OIConstants.kZeroHeadingBtn).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
   }
 
   /**
@@ -70,4 +73,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+  public Command getAutonomousCommand() {
+    return null;
+  }
 }

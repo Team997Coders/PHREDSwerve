@@ -101,6 +101,8 @@ public final class Constants {
     public static final int kDriverRotAxis = Axis.kRightX.value;
     public static final int kDriverFieldOrientedButtonIdx = Button.kA.value;
 
+    public static final int kZeroHeadingBtn = Button.kLeftBumper.value;
+
     public static final double kDeadband = 0.3;
   }
 }
