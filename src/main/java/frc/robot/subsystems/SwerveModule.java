@@ -65,9 +65,13 @@ public class SwerveModule {
     return driveEncoder.getPosition();
   }
 
+  /**
+   * Returns current turn position in range -pi to pi
+*/
   public double getTurningPosition() {
-    return Math.IEEEremainder(turningEncoder.getPosition(), 360);
+    return Math.IEEEremainder(turningEncoder.getPosition(), Math.PI * 2);
   }
+   
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
@@ -83,8 +87,9 @@ public class SwerveModule {
   }
 
   public double getAbsoluteEncoderRad() {
+    // get absolute encoder --> value is 0 to 2pi
     double angle = absoluteEncoder.getPosition();
-
+    // move range to -pi to pi and flip if encoder reversed
     return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
 
@@ -105,9 +110,13 @@ public class SwerveModule {
     // state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
     turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] speed", state.speedMetersPerSecond);
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] angle", state.angle.getRadians());
+    
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired speed", state.speedMetersPerSecond);
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired angle", state.angle.getRadians());
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] Current Position", getTurningPosition());
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] encoder Position", turningEncoder.getPosition());
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] absolute encoder Position", absoluteEncoder.getPosition());
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] PID Output", turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
 
   }
 
