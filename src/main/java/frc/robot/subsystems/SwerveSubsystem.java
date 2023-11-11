@@ -7,6 +7,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.SendableBuilder.BackendKind;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -62,6 +63,7 @@ public class SwerveSubsystem extends SubsystemBase {
       try {
         Thread.sleep(1000);
         zeroHeading();
+        initModules();
       } catch (Exception e) {
       }
     }).start();
@@ -86,6 +88,22 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
+    
+
+    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition()/ (2 * Math.PI));
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition()/ (2 * Math.PI));
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition()/ (2 * Math.PI));
+
+  }
+  public void initModules() {
+    SwerveModuleState state = new SwerveModuleState(0, new Rotation2d());
+    frontLeft.setDesiredState(state);
+    frontRight.setDesiredState(state);
+    backLeft.setDesiredState(state);
+    backRight.setDesiredState(state);
+
+
   }
 
   public void stopModules() {
