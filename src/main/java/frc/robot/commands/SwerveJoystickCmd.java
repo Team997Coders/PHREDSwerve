@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import java.util.function.Supplier;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,7 +45,7 @@ public class SwerveJoystickCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  }
+    }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
