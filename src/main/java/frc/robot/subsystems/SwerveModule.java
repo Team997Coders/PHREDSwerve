@@ -69,7 +69,7 @@ public class SwerveModule {
    * Returns current turn position in range -pi to pi
 */
   public double getTurningPosition() {
-    return Math.IEEEremainder(turningEncoder.getPosition(), Math.PI * 2);
+    return turningEncoder.getPosition() * Math.PI * 2 / ModuleConstants.kTurningMotorGearRatio;
   }
    
 
@@ -109,7 +109,7 @@ public class SwerveModule {
     }
     // state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+    //turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
     
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired speed", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired angle", state.angle.getRadians());
