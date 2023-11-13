@@ -67,14 +67,13 @@ public class SwerveModule {
 
   /**
    * Returns current turn position in range -pi to pi
-*/
+   */
   /**
    * Returns current turn position in range -pi to pi
-*/
+   */
   public double getTurningPosition() {
-    return turningEncoder.getPosition() * Math.PI * 2 / ModuleConstants.kTurningMotorGearRotationPerSteerRotation;
+    return turningEncoder.getPosition() * Math.PI * 2 / ModuleConstants.kTurningMotorRotationPerSteerRotation;
   }
-   
 
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
@@ -93,8 +92,6 @@ public class SwerveModule {
     // get absolute encoder --> value is 0 to 2pi
     // get absolute encoder --> value is 0 to 2pi
     double angle = absoluteEncoder.getPosition();
-    // move range to -pi to pi and flip if encoder reversed
-    return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
     // move range to -pi to pi and flip if encoder reversed
     return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
@@ -116,15 +113,20 @@ public class SwerveModule {
     // state = SwerveModuleState.optimize(state, getState().angle);
     // state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation));
-    
+    turningMotor.set(turningPidController.calculate(getTurningPosition(),
+        state.angle.getRadians() * ModuleConstants.kTurningMotorRotationPerSteerRotation));
+
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired speed", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired angle", state.angle.getRadians());
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] Current Position", getTurningPosition());
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] encoder Position", turningEncoder.getPosition());
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] absolute encoder Position", absoluteEncoder.getPosition());
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] PID Output", turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] target angle", state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation);
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] encoder Position",
+        turningEncoder.getPosition());
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] absolute encoder Position",
+        absoluteEncoder.getPosition());
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] PID Output",
+        turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] target angle",
+        state.angle.getRadians() * ModuleConstants.kTurningMotorRotationPerSteerRotation);
 
   }
 
