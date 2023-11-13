@@ -68,6 +68,9 @@ public class SwerveModule {
   /**
    * Returns current turn position in range -pi to pi
 */
+  /**
+   * Returns current turn position in range -pi to pi
+*/
   public double getTurningPosition() {
     return turningEncoder.getPosition() * Math.PI * 2 / ModuleConstants.kTurningMotorGearRotationPerSteerRotation;
   }
@@ -88,7 +91,10 @@ public class SwerveModule {
 
   public double getAbsoluteEncoderRad() {
     // get absolute encoder --> value is 0 to 2pi
+    // get absolute encoder --> value is 0 to 2pi
     double angle = absoluteEncoder.getPosition();
+    // move range to -pi to pi and flip if encoder reversed
+    return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
     // move range to -pi to pi and flip if encoder reversed
     return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
@@ -107,6 +113,7 @@ public class SwerveModule {
       stop();
       return;
     }
+    // state = SwerveModuleState.optimize(state, getState().angle);
     // state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
     turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation));
