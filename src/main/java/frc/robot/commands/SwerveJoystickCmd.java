@@ -45,7 +45,7 @@ public class SwerveJoystickCmd extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -81,7 +81,6 @@ public class SwerveJoystickCmd extends CommandBase {
 
     // 6. Output each module states to wheels
     swerveSubsystem.setModuleStates(moduleStates);
-
 
   }
 

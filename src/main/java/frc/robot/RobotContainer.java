@@ -65,7 +65,8 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
-    new JoystickButton(driverJoystick, OIConstants.kZeroHeadingBtn).onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
+    new JoystickButton(driverJoystick, OIConstants.kZeroHeadingBtn)
+        .onTrue(new InstantCommand(() -> swerveSubsystem.zeroHeading()));
   }
 
   /**

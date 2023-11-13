@@ -70,7 +70,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void zeroHeading() {
-    gyro.reset();
+    gyro.zeroYaw();
     frontLeft.resetEncoders();
     frontRight.resetEncoders();
     backLeft.resetEncoders();
@@ -79,35 +79,42 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getHeading() {
-    return Math.IEEEremainder(gyro.getAngle(), 360);
+    if (gyro.isMagnetometerCalibrated()) {
+      // We will only get valid fused headings if the magnetometer is calibrated
+      return gyro.getFusedHeading();
+    }
+
+    // We have to invert the angle of the NavX so that rotating the robot
+    // counter-clockwise makes the angle increase.
+    return 360.0 - gyro.getYaw();
   }
 
   public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
+
   // -------------------------------------------------
-  // -------------   Update Dashboard ----------------
+  // ------------- Update Dashboard ----------------
   public void periodic() {
     SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
     SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
-    
 
     SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() / (2 * Math.PI));
-    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition()/ (2 * Math.PI));
-    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition()/ (2 * Math.PI));
-    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition()/ (2 * Math.PI));
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() / (2 * Math.PI));
 
   }
+
   public void initModules() {
     SwerveModuleState state = new SwerveModuleState(0, new Rotation2d());
     frontLeft.setDesiredState(state);
     frontRight.setDesiredState(state);
     backLeft.setDesiredState(state);
     backRight.setDesiredState(state);
-
 
   }
 
