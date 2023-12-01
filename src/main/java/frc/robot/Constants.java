@@ -65,10 +65,10 @@ public final class Constants {
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2*Math.PI-4.937;
+    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 2*Math.PI-5.814;
+    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 2*Math.PI-4.754;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2*Math.PI-1.224;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 3;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -108,7 +108,6 @@ public final class Constants {
     public static final int kXButton = Button.kX.value;
     public static final int kYButton = Button.kY.value;
 
-    public static final double kDeadband = 0.2;
     public static final double kDeadband = 0.2;
   }
 }

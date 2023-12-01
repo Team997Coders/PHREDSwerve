@@ -1,11 +1,10 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
@@ -28,6 +27,7 @@ public class SwerveModule {
   private final RelativeEncoder driveEncoder;
   private final RelativeEncoder turningEncoder;
 
+  private final SparkMaxPIDController sparkmaxpid;
   private final PIDController turningPidController;
 
   private final SparkMaxAbsoluteEncoder absoluteEncoder;
@@ -52,11 +52,21 @@ public class SwerveModule {
 
     driveEncoder.setPositionConversionFactor(ModuleConstants.kDriveEncoderRot2Meter);
     driveEncoder.setVelocityConversionFactor(ModuleConstants.kDriveEncoderRPM2MeterPerSec);
-    turningEncoder.setPositionConversionFactor(ModuleConstants.kTurningEncoderRot2Rad);
-    turningEncoder.setVelocityConversionFactor(ModuleConstants.kTurningEncoderRPM2RadPerSec);
+    turningEncoder.setPositionConversionFactor(1);
+    turningEncoder.setVelocityConversionFactor(1);
 
     turningPidController = new PIDController(ModuleConstants.kPTurning, 0, 0);
     turningPidController.enableContinuousInput(-Math.PI, Math.PI);
+    turningPidController.setTolerance(1);
+    turningPidController.reset();
+    sparkmaxpid = turningMotor.getPIDController();
+    sparkmaxpid.setP(ModuleConstants.kPTurning);
+    sparkmaxpid.setI(0);
+    sparkmaxpid.setD(0);
+    sparkmaxpid.setFeedbackDevice(turningEncoder);
+    sparkmaxpid.setPositionPIDWrappingEnabled(true);
+    sparkmaxpid.setPositionPIDWrappingMaxInput(1);
+    sparkmaxpid.setPositionPIDWrappingMinInput(-1);
 
     resetEncoders();
   }
@@ -95,8 +105,6 @@ public class SwerveModule {
     double angle = absoluteEncoder.getPosition();
     // move range to -pi to pi and flip if encoder reversed
     return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
-    // move range to -pi to pi and flip if encoder reversed
-    return (angle - Math.PI) * (absoluteEncoderReversed ? -1.0 : 1.0);
   }
 
   public void resetEncoders() {
@@ -114,17 +122,18 @@ public class SwerveModule {
       return;
     }
     // state = SwerveModuleState.optimize(state, getState().angle);
-    // state = SwerveModuleState.optimize(state, getState().angle);
+    state = SwerveModuleState.optimize(state, getState().angle);
     driveMotor.set(state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation));
+    turningMotor.set(turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
     
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired speed", state.speedMetersPerSecond);
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] desired angle", state.angle.getRadians());
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] Current Position", getTurningPosition());
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] encoder Position", turningEncoder.getPosition());
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] absolute encoder Position", absoluteEncoder.getPosition());
-    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] PID Output", turningPidController.calculate(getTurningPosition(), state.angle.getRadians()));
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] PID Output", turningPidController.calculate(getTurningPosition(), state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation));
     SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] target angle", state.angle.getRadians() * ModuleConstants.kTurningMotorGearRotationPerSteerRotation);
+    SmartDashboard.putNumber("Swerve[" + turningMotor.getDeviceId() + "] position conversion factor", turningEncoder.getPositionConversionFactor());
 
   }
 
