@@ -8,15 +8,16 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 
 public final class Constants {
+  public static final double k2pi = Math.PI * 2;
 
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kDriveMotorGearRatio = 1 / 6.75;
-    public static int kTurnEncoderTicksPerRotation = 42;
-    // public static final double kTurningMotorGearRatio = 1/(150 / 7);
-    public static final double kTurningMotorGearRotationPerSteerRotation = 150/7;
+    public static final int kTurnMotorEncoderTicksPerRotation = 42;
+    public static final double kTurningMotorRotationPerSteerRotation = 150 / 7;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-    public static final double kTurningEncoderRot2Rad = kTurningMotorGearRotationPerSteerRotation * 2 * Math.PI;
+    public static final double kTurningEncoderRot2Rad = kTurningMotorRotationPerSteerRotation
+        * kTurnMotorEncoderTicksPerRotation;
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
@@ -24,10 +25,9 @@ public final class Constants {
   }
 
   public static final class DriveConstants {
-
-    // Distance between right and left wheels
+    // Distance between right and left wheels in inches
     public static final double kTrackWidth = Units.inchesToMeters(25);
-    // Distance between front and back wheels
+    // Distance between front and back wheels in inches
     public static final double kWheelBase = Units.inchesToMeters(25);
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
         new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -71,7 +71,7 @@ public final class Constants {
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 2*Math.PI-1.224;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 3;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * k2pi;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
@@ -105,8 +105,8 @@ public final class Constants {
     public static final int kDriverFieldOrientedButtonIdx = Button.kA.value;
 
     public static final int kZeroHeadingBtn = Button.kLeftBumper.value;
-    public static final int kXButton = Button.kX.value;
-    public static final int kYButton = Button.kY.value;
+    public static final int kXButton= Button.kX.value;
+    public static final int kYButton= Button.kY.value;
 
     public static final double kDeadband = 0.2;
   }
