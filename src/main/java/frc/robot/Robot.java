@@ -89,7 +89,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     //private final CANSparkMax turningMotor;
-    //public final SparkMaxAbsoluteEncoder absoluteEncoder;
+    //private final SparkMaxAbsoluteEncoder absoluteEncoder;
 
 
   }

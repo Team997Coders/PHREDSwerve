@@ -21,7 +21,11 @@ public final class Constants {
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-    public static final double kPTurning = 0.5;
+    public static final double kPTurning = 0.005;
+    public static final double kITurning = 0.001;
+    public static final double kDTurning = 0.0005;
+
+
   }
 
   public static final class DriveConstants {
