@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase {
         frontLeft.getPosition(),
         frontRight.getPosition(),
         backLeft.getPosition(),
-        backRight.getPosition(),
+        backRight.getPosition()
     };
   }
 
@@ -126,6 +126,7 @@ public class SwerveSubsystem extends SubsystemBase {
     backLeft.stop();
     backRight.stop();
   }
+//state.angle.getRadians());
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
