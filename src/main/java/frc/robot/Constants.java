@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+
 import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.XboxController.Button;
 
@@ -13,23 +14,24 @@ public final class Constants {
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kDriveMotorGearRatio = 1 / 6.75;
+    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+
+    // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final int kTurnMotorEncoderTicksPerRotation = 42;
     public static final double kTurningMotorRotationPerSteerRotation = 150 / 7;
-    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kTurningEncoderRot2Rad = kTurningMotorRotationPerSteerRotation
         * kTurnMotorEncoderTicksPerRotation;
-    // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
-    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.5;
     public static final double kITurning = 0.001;
     public static final double kDTurning = 0.005;
-/*
-Original PID
-    public static final double kPTurning = 0.5;
-    public static final double kITurning = 0.001;
-    public static final double kDTurning = 0.0005;
-    */
+    /*
+     * Original PID
+     * public static final double kPTurning = 0.5;
+     * public static final double kITurning = 0.001;
+     * public static final double kDTurning = 0.0005;
+     */
   }
 
   public static final class DriveConstants {
@@ -44,16 +46,16 @@ Original PID
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
     public static final int kFrontLeftDriveMotorPort = 11;
-    public static final int kBackLeftDriveMotorPort = 01;
+    public static final int kBackLeftDriveMotorPort = 1;
     public static final int kFrontRightDriveMotorPort = 21;
     public static final int kBackRightDriveMotorPort = 31;
 
     public static final int kFrontLeftTurningMotorPort = 12;
-    // back left had to be changed due to technical difficulties so all the forties are 0X
-    public static final int kBackLeftTurningMotorPort = 02;
+    // back left had to be changed due to technical difficulties so all the forties
+    // are 0X
+    public static final int kBackLeftTurningMotorPort = 2;
     public static final int kFrontRightTurningMotorPort = 22;
     public static final int kBackRightTurningMotorPort = 32;
- 
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
@@ -66,7 +68,7 @@ Original PID
     public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 12;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 02;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 2;
     public static final int kFrontRightDriveAbsoluteEncoderPort = 22;
     public static final int kBackRightDriveAbsoluteEncoderPort = 32;
 
@@ -78,7 +80,7 @@ Original PID
     public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.213;
     public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.217;
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 3.802;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = k2pi-5.494;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = k2pi - 5.494;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 3;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * k2pi;
@@ -115,8 +117,8 @@ Original PID
     public static final int kDriverFieldOrientedButtonIdx = Button.kA.value;
 
     public static final int kZeroHeadingBtn = Button.kLeftBumper.value;
-    public static final int kXButton= Button.kX.value;
-    public static final int kYButton= Button.kY.value;
+    public static final int kXButton = Button.kX.value;
+    public static final int kYButton = Button.kY.value;
 
     public static final double kDeadband = 0.2;
   }

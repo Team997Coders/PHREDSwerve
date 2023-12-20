@@ -3,11 +3,11 @@ package frc.robot.subsystems;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.sendable.SendableBuilder.BackendKind;
 import edu.wpi.first.util.sendable.SendableBuilder.BackendKind;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +19,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kFrontLeftTurningMotorPort,
       DriveConstants.kFrontLeftDriveEncoderReversed,
       DriveConstants.kFrontLeftTurningEncoderReversed,
+      DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
       DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
       DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
@@ -27,6 +28,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kFrontRightTurningMotorPort,
       DriveConstants.kFrontRightDriveEncoderReversed,
       DriveConstants.kFrontRightTurningEncoderReversed,
+      DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
       DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
       DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
@@ -35,6 +37,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kBackLeftTurningMotorPort,
       DriveConstants.kBackLeftDriveEncoderReversed,
       DriveConstants.kBackLeftTurningEncoderReversed,
+      DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
       DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
       DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
 
@@ -43,10 +46,12 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightTurningMotorPort,
       DriveConstants.kBackRightDriveEncoderReversed,
       DriveConstants.kBackRightTurningEncoderReversed,
+      DriveConstants.kBackRightDriveAbsoluteEncoderPort,
       DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
       DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
   private final AHRS gyro = new AHRS(SPI.Port.kMXP);
+
   private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(DriveConstants.kDriveKinematics,
       new Rotation2d(), getModulePositions());
 
@@ -65,14 +70,14 @@ public class SwerveSubsystem extends SubsystemBase {
         Thread.sleep(1000);
         zeroHeading();
         initModules();
-        initModules();
       } catch (Exception e) {
       }
     }).start();
   }
 
   public void zeroHeading() {
-    gyro.zeroYaw();
+    // gyro.zeroYaw();
+    gyro.reset();
     frontLeft.resetEncoders();
     frontRight.resetEncoders();
     backLeft.resetEncoders();
@@ -95,19 +100,32 @@ public class SwerveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(getHeading());
   }
 
+  public Pose2d getPose() {
+    return odometer.getPoseMeters();
+}
+public void resetOdometry(Pose2d pose) {
+  odometer.resetPosition(getRotation2d(), getModulePositions(), getPose());
+}
+
   // -------------------------------------------------
   // ------------- Update Dashboard ----------------
+  @Override
   public void periodic() {
+    odometer.update(getRotation2d(), getModulePositions());
+
     SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
     SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
     SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
 
-    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition()/ (2 * Math.PI));
-    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition()/ (2 * Math.PI));
-    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition()/ (2 * Math.PI));
-    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition()/ (2 * Math.PI));
+    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() / (2 * Math.PI));
+
+    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+
 
   }
 
@@ -126,7 +144,7 @@ public class SwerveSubsystem extends SubsystemBase {
     backLeft.stop();
     backRight.stop();
   }
-//state.angle.getRadians());
+  // state.angle.getRadians());
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
