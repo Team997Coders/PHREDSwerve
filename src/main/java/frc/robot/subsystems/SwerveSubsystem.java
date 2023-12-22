@@ -19,8 +19,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kFrontLeftTurningMotorPort,
       DriveConstants.kFrontLeftDriveEncoderReversed,
       DriveConstants.kFrontLeftTurningEncoderReversed,
-      DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
-      DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad,
+      DriveConstants.kFrontLeftModuleChassisAngularOffset,
       DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
   private final SwerveModule frontRight = new SwerveModule(
@@ -28,8 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kFrontRightTurningMotorPort,
       DriveConstants.kFrontRightDriveEncoderReversed,
       DriveConstants.kFrontRightTurningEncoderReversed,
-      DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
-      DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad,
+      DriveConstants.kFrontRightModuleChassisAngularOffset,
       DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
   public final SwerveModule backLeft = new SwerveModule(
@@ -37,8 +35,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kBackLeftTurningMotorPort,
       DriveConstants.kBackLeftDriveEncoderReversed,
       DriveConstants.kBackLeftTurningEncoderReversed,
-      DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
-      DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad,
+      DriveConstants.kBackLeftModuleChassisAngularOffset,
       DriveConstants.kBackLeftDriveAbsoluteEncoderReversed);
 
   private final SwerveModule backRight = new SwerveModule(
@@ -46,8 +43,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kBackRightTurningMotorPort,
       DriveConstants.kBackRightDriveEncoderReversed,
       DriveConstants.kBackRightTurningEncoderReversed,
-      DriveConstants.kBackRightDriveAbsoluteEncoderPort,
-      DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad,
+      DriveConstants.kBackRightModuleChassisAngularOffset,
       DriveConstants.kBackRightDriveAbsoluteEncoderReversed);
 
   private final AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -114,11 +110,6 @@ public void resetOdometry(Pose2d pose) {
     odometer.update(getRotation2d(), getModulePositions());
 
     SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
-    SmartDashboard.putNumber("Front Left Heading", frontLeft.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("Front Right Heading", frontRight.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("Back Left Heading", backLeft.getAbsoluteEncoderRad());
-    SmartDashboard.putNumber("Back Right Heading", backRight.getAbsoluteEncoderRad());
-
     SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() / (2 * Math.PI));
     SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() / (2 * Math.PI));
     SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() / (2 * Math.PI));

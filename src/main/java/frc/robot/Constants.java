@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -16,6 +18,7 @@ public final class Constants {
     public static final double kDriveMotorGearRatio = 1 / 6.75;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
+    public static final double kDriveWheelFreeRps = NeoMotorConstants.kFreeSpeedRpm / 60;
 
     // public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio;
     public static final int kTurnMotorEncoderTicksPerRotation = 42;
@@ -23,15 +26,31 @@ public final class Constants {
     public static final double kTurningEncoderRot2Rad = kTurningMotorRotationPerSteerRotation
         * kTurnMotorEncoderTicksPerRotation;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-    public static final double kPTurning = 0.5;
-    public static final double kITurning = 0.001;
-    public static final double kDTurning = 0.005;
-    /*
-     * Original PID
-     * public static final double kPTurning = 0.5;
-     * public static final double kITurning = 0.001;
-     * public static final double kDTurning = 0.0005;
-     */
+
+    public static final double kTurningMotorPositionFactor = k2pi;  // Radians
+    public static final double kTurningEncoderPositionPIDMinInput = 0; // Radians
+    public static final double kTurningEncoderPositionPIDMaxInput = kTurningMotorPositionFactor; // Radians
+    
+    public static final double kDrivingP = 0.4;
+    public static final double kDrivingI = 0;
+    public static final double kDrivingD = 0;
+    public static final double kDrivingFF = 1 / kDriveWheelFreeRps;
+    public static final double kDrivingMinInput = -1;
+    public static final double kDrivingMaxOutput = 1;
+
+    public static final double kPTurning = 1;
+    public static final double kITurning = 0;
+    public static final double kDTurning = 0;
+    public static final double kFFTurning = 0;
+    public static final double kTurningMinInput = -1;
+    public static final double kTurningMaxOutput = 1;
+
+    public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
+    public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
+
+    public static final int kDrivingMotorCurrentLimit = 50; // amps
+    public static final int kTurningMotorCurrentLimit = 20; // amps
+
   }
 
   public static final class DriveConstants {
@@ -45,15 +64,13 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-    public static final int kFrontLeftDriveMotorPort = 11;
     public static final int kBackLeftDriveMotorPort = 1;
+    public static final int kFrontLeftDriveMotorPort = 11;
     public static final int kFrontRightDriveMotorPort = 21;
     public static final int kBackRightDriveMotorPort = 31;
 
-    public static final int kFrontLeftTurningMotorPort = 12;
-    // back left had to be changed due to technical difficulties so all the forties
-    // are 0X
     public static final int kBackLeftTurningMotorPort = 2;
+    public static final int kFrontLeftTurningMotorPort = 12;
     public static final int kFrontRightTurningMotorPort = 22;
     public static final int kBackRightTurningMotorPort = 32;
 
@@ -77,11 +94,17 @@ public final class Constants {
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 2.213;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 4.217;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 3.802;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = k2pi - 5.494;
+    public static final double kFrontLeftModuleChassisAngularOffset = 0;
+    public static final double kBackLeftModuleChassisAngularOffset = 0;
+    public static final double kFrontRightModuleChassisAngularOffset = 0;
+    public static final double kBackRightModuleChassisAngularOffset =0;
 
+    /*
+    public static final double kFrontLeftModuleChassisAngularOffset = -Math.PI / 2;
+    public static final double kBackLeftModuleChassisAngularOffset = Math.PI;
+    public static final double kFrontRightModuleChassisAngularOffset = 0;
+    public static final double kBackRightModuleChassisAngularOffset = Math.PI / 2;
+*/
     public static final double kPhysicalMaxSpeedMetersPerSecond = 3;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * k2pi;
 
@@ -121,5 +144,9 @@ public final class Constants {
     public static final int kYButton = Button.kY.value;
 
     public static final double kDeadband = 0.2;
+  }
+  
+  public final static class NeoMotorConstants {
+    public static final double kFreeSpeedRpm = 5676;
   }
 }
