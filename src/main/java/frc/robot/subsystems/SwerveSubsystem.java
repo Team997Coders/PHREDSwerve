@@ -8,7 +8,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.util.sendable.SendableBuilder.BackendKind;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
@@ -116,8 +115,6 @@ public void resetOdometry(Pose2d pose) {
     SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() / (2 * Math.PI));
 
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-
-
   }
 
   public void initModules() {
@@ -126,7 +123,6 @@ public void resetOdometry(Pose2d pose) {
     frontRight.setDesiredState(state);
     backLeft.setDesiredState(state);
     backRight.setDesiredState(state);
-
   }
 
   public void stopModules() {
