@@ -38,7 +38,7 @@ public final class Constants {
     public static final double kDrivingMinInput = -1;
     public static final double kDrivingMaxOutput = 1;
 
-    public static final double kPTurning = 1;
+    public static final double kPTurning = .05;
     public static final double kITurning = 0;
     public static final double kDTurning = 0;
     public static final double kFFTurning = 0;
@@ -64,15 +64,15 @@ public final class Constants {
         new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
         new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
 
-    public static final int kBackLeftDriveMotorPort = 1;
-    public static final int kFrontLeftDriveMotorPort = 11;
-    public static final int kFrontRightDriveMotorPort = 21;
-    public static final int kBackRightDriveMotorPort = 31;
+    public static final int kBackLeftDriveMotorPort = 2;
+    public static final int kFrontLeftDriveMotorPort = 8;
+    public static final int kFrontRightDriveMotorPort = 6;
+    public static final int kBackRightDriveMotorPort = 4;
 
-    public static final int kBackLeftTurningMotorPort = 2;
-    public static final int kFrontLeftTurningMotorPort = 12;
-    public static final int kFrontRightTurningMotorPort = 22;
-    public static final int kBackRightTurningMotorPort = 32;
+    public static final int kBackLeftTurningMotorPort = 3;
+    public static final int kFrontLeftTurningMotorPort = 1;
+    public static final int kFrontRightTurningMotorPort = 7;
+    public static final int kBackRightTurningMotorPort = 5;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;

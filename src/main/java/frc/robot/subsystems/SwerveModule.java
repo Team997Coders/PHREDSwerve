@@ -9,6 +9,7 @@ import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.ModuleConstants;
 
 /**
@@ -49,7 +50,9 @@ public class SwerveModule {
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
     driveEncoder = driveSparkMax.getEncoder();
+
     turningEncoder = turningSparkMax.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+    turningEncoder.setAverageDepth(16);
     drivingPidController = driveSparkMax.getPIDController();
     turningPidController = turningSparkMax.getPIDController();
     drivingPidController.setFeedbackDevice(driveEncoder);
@@ -156,9 +159,11 @@ public class SwerveModule {
         new Rotation2d(turningEncoder.getPosition()));
 
     drivingPidController.setReference(optimizedDesiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
-    turningPidController.setReference(optimizedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
+    turningPidController.setReference(correctedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     moduleDesiredState = desiredState;
+    SmartDashboard.putNumber("desired angle state", desiredState.angle.getRadians());
+    SmartDashboard.putNumber("\'optimized\' desired angle state ", chassisAngularOffset);
   }
 
   public void stop() {
