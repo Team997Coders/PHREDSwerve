@@ -109,10 +109,10 @@ public void resetOdometry(Pose2d pose) {
     odometer.update(getRotation2d(), getModulePositions());
 
     SmartDashboard.putNumber("Robot Heading (gyro)", getHeading());
-    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition() / (2 * Math.PI));
-    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition() / (2 * Math.PI));
-    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition() / (2 * Math.PI));
-    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition() / (2 * Math.PI));
+    SmartDashboard.putNumber("Front Left Turning Position", frontLeft.getTurningPosition());
+    SmartDashboard.putNumber("Front Right Turning Position", frontRight.getTurningPosition());
+    SmartDashboard.putNumber("Back Left Turning Position", backLeft.getTurningPosition());
+    SmartDashboard.putNumber("Back Right Turning Position", backRight.getTurningPosition());
 
     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
   }

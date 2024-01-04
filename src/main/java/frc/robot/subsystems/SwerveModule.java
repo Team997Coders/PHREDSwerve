@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.AbsoluteEncoder;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -31,6 +32,8 @@ public class SwerveModule {
 
   private double chassisAngularOffset = 0;
   private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
+
+  private LinearFilter angleFilter = new LinearFilter(null, null);
 
   public SwerveModule(
       int driveMotorId,
@@ -125,7 +128,7 @@ public class SwerveModule {
    * Returns current turn position in range -pi to pi
    */
   public double getTurningPosition() {
-    return turningEncoder.getPosition(); // ModuleConstants.kTurningMotorRotationPerSteerRotation;
+    return angleFilter.calculate(turningEncoder.getPosition()) ; // ModuleConstants.kTurningMotorRotationPerSteerRotation;
   }
 
   public SwerveModulePosition getPosition() {
