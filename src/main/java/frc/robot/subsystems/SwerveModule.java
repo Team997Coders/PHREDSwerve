@@ -10,7 +10,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
 
 /**
@@ -29,11 +31,10 @@ public class SwerveModule {
 
   private final SparkMaxPIDController drivingPidController;
   private final SparkMaxPIDController turningPidController;
-
+  
   private double chassisAngularOffset = 0;
   private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
 
-  private LinearFilter angleFilter = new LinearFilter(null, null);
 
   public SwerveModule(
       int driveMotorId,
@@ -60,7 +61,9 @@ public class SwerveModule {
     turningPidController = turningSparkMax.getPIDController();
     drivingPidController.setFeedbackDevice(driveEncoder);
     turningPidController.setFeedbackDevice(turningEncoder);
+    
 
+  //  turningPidController.set
     // Apply position and velocity conversion factors for the driving encoder. The
     // native units for position and velocity are rotations and RPM, respectively,
     // but we want meters and meters per second to use with WPILib's swerve APIs.
@@ -128,7 +131,7 @@ public class SwerveModule {
    * Returns current turn position in range -pi to pi
    */
   public double getTurningPosition() {
-    return angleFilter.calculate(turningEncoder.getPosition()) ; // ModuleConstants.kTurningMotorRotationPerSteerRotation;
+   return turningEncoder.getPosition();
   }
 
   public SwerveModulePosition getPosition() {
