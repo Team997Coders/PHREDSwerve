@@ -40,10 +40,11 @@ public final class Constants {
 
     public static final double kPTurning = .05;
     public static final double kITurning = 0;
-    public static final double kDTurning = 0;
+    public static final double kDTurning = .15;
     public static final double kFFTurning = 0;
     public static final double kTurningMinInput = -1;
     public static final double kTurningMaxOutput = 1;
+    
 
     public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
     public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
@@ -138,7 +139,7 @@ public final class Constants {
     public static final int kXButton = Button.kX.value;
     public static final int kYButton = Button.kY.value;
 
-    public static final double kDeadband = 0.2;
+    public static final double kDeadband = 50;
   }
   
   public final static class NeoMotorConstants {

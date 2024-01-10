@@ -35,8 +35,10 @@ public class SwerveModule {
   private double chassisAngularOffset = 0;
   private SwerveModuleState moduleDesiredState = new SwerveModuleState(0.0, new Rotation2d());
 
+  private int ModuleID;
 
   public SwerveModule(
+       
       int driveMotorId,
       int turningMotorId,
       boolean driveMotorReversed,
@@ -97,6 +99,7 @@ public class SwerveModule {
     turningPidController.setPositionPIDWrappingEnabled(true);
     turningPidController.setPositionPIDWrappingMinInput(ModuleConstants.kTurningEncoderPositionPIDMinInput);
     turningPidController.setPositionPIDWrappingMaxInput(ModuleConstants.kTurningEncoderPositionPIDMaxInput);
+    //turningPidController.setSmartMotionAllowedClosedLoopError(50000, 0);
 
     // Set the PID gains for the turning motor. Note these are example gains, and
     // you
@@ -152,6 +155,7 @@ public class SwerveModule {
   }
 
   public SwerveModuleState getState() {
+    //SmartDashboard.putNumber("Module #" + this.ModuleID + " encoder: " + turningEncoder.getPosition());
     return new SwerveModuleState(getDriveVelocity(),
         new Rotation2d(turningEncoder.getPosition() - chassisAngularOffset));
   }
@@ -168,8 +172,8 @@ public class SwerveModule {
     turningPidController.setReference(correctedDesiredState.angle.getRadians(), CANSparkMax.ControlType.kPosition);
 
     moduleDesiredState = desiredState;
-    SmartDashboard.putNumber("desired angle state", desiredState.angle.getRadians());
-    SmartDashboard.putNumber("\'optimized\' desired angle state ", chassisAngularOffset);
+    SmartDashboard.putNumber("Module #" + this.ModuleID + "desired angle state", desiredState.angle.getRadians());
+    SmartDashboard.putNumber("Module #" + this.ModuleID + "\'optimized\' desired angle state ", chassisAngularOffset);
   }
 
   public void stop() {

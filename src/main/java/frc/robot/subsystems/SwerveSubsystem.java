@@ -21,7 +21,7 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kFrontLeftModuleChassisAngularOffset,
       DriveConstants.kFrontLeftTurningAbsoluteEncoderReversed);
 
-  private final SwerveModule frontRight = new SwerveModule(
+  private final SwerveModule frontRight = new SwerveModule( 
       DriveConstants.kFrontRightDriveMotorPort,
       DriveConstants.kFrontRightTurningMotorPort,
       DriveConstants.kFrontRightDriveEncoderReversed,
